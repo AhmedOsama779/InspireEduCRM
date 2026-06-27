@@ -1,0 +1,45 @@
+.navbar {
+  background-color: var(--ink);
+  padding: 0.9rem 0;
+}
+.navbar-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1.5rem;
+}
+.brand {
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+.brand span {
+  color: var(--terracotta);
+}
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.user-name {
+  color: #C7CDD3;
+  font-size: 0.9rem;
+}
+.logout-btn {
+  background: transparent;
+  border: 1px solid #3D5266;
+  color: #fff;
+  padding: 0.35rem 0.9rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.logout-btn:hover {
+  background-color: var(--terracotta);
+  border-color: var(--terracotta);
+}

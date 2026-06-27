@@ -1,0 +1,198 @@
+<div class="container mt-4" *ngIf="school">
+  <a routerLink="/schools" class="back-link">&larr; Back to schools</a>
+
+  <div class="school-header">
+    <div>
+      <h2 class="mb-1">{{ school.name }}</h2>
+      <p class="header-meta">{{ school.type }} &middot; {{ school.city }}</p>
+    </div>
+    <span class="school-tag">{{ school.type }}</span>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">School info</h5>
+      <div class="info-grid">
+        <div>
+          <span class="info-label">Address</span>
+          <span class="info-value">{{ school.address }}</span>
+        </div>
+        <div>
+          <span class="info-label">Principal</span>
+          <span class="info-value">{{ school.principalName }}</span>
+        </div>
+        <div>
+          <span class="info-label">Principal mobile</span>
+          <span class="info-value">{{ school.principalMobile }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+  <div class="card-body">
+    <h5 class="card-title mb-3">Lead status</h5>
+    <app-lead-stepper
+      *ngIf="lead"
+      [currentStage]="lead.stage"
+      (stageChange)="onStageChange($event)"
+    ></app-lead-stepper>
+    <p *ngIf="!lead" class="text-muted mb-0">No lead yet — log a visit to start the pipeline.</p>
+  </div>
+</div>
+
+  <div class="card mb-4">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center">
+      <h5 class="card-title">Contacts</h5>
+      <button class="btn btn-sm btn-outline-primary" (click)="showAddContactForm = !showAddContactForm">
+        {{ showAddContactForm ? 'Cancel' : '+ Add Contact' }}
+      </button>
+    </div>
+
+    <ul class="list-group mb-3">
+      <li class="list-group-item" *ngFor="let contact of contacts">
+        <strong>{{ contact.name }}</strong> — {{ contact.position }}<br>
+        {{ contact.mobile }} | {{ contact.email }}
+      </li>
+    </ul>
+    <p *ngIf="contacts.length === 0" class="text-muted">No contacts yet.</p>
+
+    <form *ngIf="showAddContactForm" (ngSubmit)="onAddContact()" class="border-top pt-3">
+      <div class="mb-2">
+        <input type="text" class="form-control" placeholder="Name" [(ngModel)]="newContactName" name="newContactName" required />
+      </div>
+      <div class="mb-2">
+        <input type="text" class="form-control" placeholder="Position (e.g. Principal)" [(ngModel)]="newContactPosition" name="newContactPosition" required />
+      </div>
+      <div class="mb-2">
+        <input type="text" class="form-control" placeholder="Mobile" [(ngModel)]="newContactMobile" name="newContactMobile" required />
+      </div>
+      <div class="mb-2">
+        <input type="email" class="form-control" placeholder="Email" [(ngModel)]="newContactEmail" name="newContactEmail" required />
+      </div>
+      <button type="submit" class="btn btn-primary btn-sm">Save Contact</button>
+    </form>
+  </div>
+  <div class="card mb-4">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center">
+      <h5 class="card-title">Visits</h5>
+      <button class="btn btn-sm btn-outline-primary" (click)="showAddVisitForm = !showAddVisitForm">
+        {{ showAddVisitForm ? 'Cancel' : '+ Log Visit' }}
+      </button>
+    </div>
+
+    <ul class="list-group mb-3">
+      <li class="list-group-item" *ngFor="let visit of visits">
+        <strong>{{ visit.visitDate | date:'mediumDate' }}</strong> — Interest: <span class="badge bg-secondary">{{ visit.interestLevel }}</span>
+        <p class="mb-0 mt-1">{{ visit.notes }}</p>
+      </li>
+    </ul>
+    <p *ngIf="visits.length === 0" class="text-muted">No visits logged yet.</p>
+
+    <form *ngIf="showAddVisitForm" (ngSubmit)="onAddVisit()" class="border-top pt-3">
+      <div class="mb-2">
+        <label class="form-label">Contact Met</label>
+        <select class="form-select" [(ngModel)]="newVisitContactId" name="newVisitContactId" required>
+          <option [ngValue]="null" disabled>Select a contact</option>
+          <option *ngFor="let contact of contacts" [ngValue]="contact.id">{{ contact.name }} ({{ contact.position }})</option>
+        </select>
+      </div>
+
+      <div class="mb-2">
+        <label class="form-label">Visit Date</label>
+        <input type="date" class="form-control" [(ngModel)]="newVisitDate" name="newVisitDate" required />
+      </div>
+
+      <div class="mb-2">
+        <label class="form-label">Interest Level</label>
+        <select class="form-select" [(ngModel)]="newVisitInterestLevel" name="newVisitInterestLevel" required>
+          <option value="" disabled selected>Select level</option>
+          <option value="Cold">Cold</option>
+          <option value="Warm">Warm</option>
+          <option value="Interested">Interested</option>
+          <option value="HighlyInterested">Highly Interested</option>
+        </select>
+      </div>
+
+      <div class="mb-2">
+        <label class="form-label">Books Presented</label>
+        <div class="form-check" *ngFor="let book of books">
+          <input
+            type="checkbox"
+            class="form-check-input"
+            [checked]="isBookSelected(book.id)"
+            (change)="toggleBookSelection(book.id)"
+          />
+          <label class="form-check-label">{{ book.title }} ({{ book.subject }})</label>
+        </div>
+      </div>
+
+      <div class="mb-2">
+        <label class="form-label">Notes</label>
+        <textarea class="form-control" [(ngModel)]="newVisitNotes" name="newVisitNotes" rows="2"></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-sm">Save Visit</button>
+    </form>
+  </div>
+  <div class="card mb-4" *ngIf="lead">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center">
+      <h5 class="card-title">Follow-Ups</h5>
+      <button class="btn btn-sm btn-outline-primary" (click)="showAddFollowUpForm = !showAddFollowUpForm">
+        {{ showAddFollowUpForm ? 'Cancel' : '+ Log Follow-Up' }}
+      </button>
+    </div>
+
+    <ul class="list-group mb-3">
+      <li class="list-group-item" *ngFor="let followUp of followUps">
+        <strong>{{ followUp.followUpDate | date:'mediumDate' }}</strong> — <span class="badge bg-secondary">{{ followUp.followUpType }}</span>
+        <p class="mb-0 mt-1">{{ followUp.summary }}</p>
+        <p class="mb-0 text-muted"><em>Next: {{ followUp.nextAction }}</em></p>
+      </li>
+    </ul>
+    <p *ngIf="followUps.length === 0" class="text-muted">No follow-ups logged yet.</p>
+
+    <form *ngIf="showAddFollowUpForm" (ngSubmit)="onAddFollowUp()" class="border-top pt-3">
+      <div class="mb-2">
+        <label class="form-label">Contact (optional)</label>
+        <select class="form-select" [(ngModel)]="newFollowUpContactId" name="newFollowUpContactId">
+          <option [ngValue]="null">No specific contact</option>
+          <option *ngFor="let contact of contacts" [ngValue]="contact.id">{{ contact.name }}</option>
+        </select>
+      </div>
+
+      <div class="mb-2">
+        <label class="form-label">Date</label>
+        <input type="date" class="form-control" [(ngModel)]="newFollowUpDate" name="newFollowUpDate" required />
+      </div>
+
+      <div class="mb-2">
+        <label class="form-label">Type</label>
+        <select class="form-select" [(ngModel)]="newFollowUpType" name="newFollowUpType" required>
+          <option value="" disabled selected>Select type</option>
+          <option value="Call">Call</option>
+          <option value="Meeting">Meeting</option>
+          <option value="Note">Note</option>
+        </select>
+      </div>
+
+      <div class="mb-2">
+        <label class="form-label">Summary</label>
+        <textarea class="form-control" [(ngModel)]="newFollowUpSummary" name="newFollowUpSummary" rows="2" required></textarea>
+      </div>
+
+      <div class="mb-2">
+        <label class="form-label">Next Action</label>
+        <input type="text" class="form-control" [(ngModel)]="newFollowUpNextAction" name="newFollowUpNextAction" />
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-sm">Save Follow-Up</button>
+    </form>
+  </div>
+</div>
+</div>
+</div>
+</div>

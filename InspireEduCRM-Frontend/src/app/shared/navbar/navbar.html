@@ -1,0 +1,9 @@
+<nav class="navbar" *ngIf="isLoggedIn">
+  <div class="navbar-inner">
+    <a routerLink="/schools" class="brand">Inspire Edu <span>CRM</span></a>
+    <div class="navbar-right">
+      <span class="user-name">{{ userName }}</span>
+      <button class="logout-btn" (click)="logout()">Log out</button>
+    </div>
+  </div>
+</nav>

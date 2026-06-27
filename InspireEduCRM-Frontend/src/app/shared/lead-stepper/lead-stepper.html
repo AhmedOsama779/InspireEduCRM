@@ -1,0 +1,20 @@
+<div class="stepper">
+  <div class="stepper-track">
+    <div
+      *ngFor="let stage of stages; let i = index"
+      class="step"
+      [class.completed]="isCompleted(i)"
+      [class.active]="isActive(i)"
+      (click)="selectStage(stage)"
+    >
+      <div class="dot">
+        <span *ngIf="isCompleted(i)">&#10003;</span>
+      </div>
+      <span class="label">{{ stage === 'FollowUp' ? 'Follow-Up' : stage }}</span>
+    </div>
+  </div>
+
+  <button class="lost-btn" [class.is-lost]="isLost" (click)="markLost()">
+    {{ isLost ? 'Marked as Lost' : 'Mark as Lost' }}
+  </button>
+</div>

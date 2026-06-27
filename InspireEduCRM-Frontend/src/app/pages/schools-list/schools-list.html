@@ -1,0 +1,23 @@
+<div class="container mt-4">
+  <h2>Schools</h2>
+    <a routerLink="/schools/add" class="btn btn-primary">+ Add School</a>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>City</th>
+        <th>Type</th>
+        <th>Principal</th>
+      </tr>
+    </thead>
+    <tbody>
+<tr *ngFor="let school of schools" [routerLink]="['/schools', school.id]" style="cursor: pointer;">
+        <td>{{ school.name }}</td>
+        <td>{{ school.city }}</td>
+        <td>{{ school.type }}</td>
+        <td>{{ school.principalName }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
